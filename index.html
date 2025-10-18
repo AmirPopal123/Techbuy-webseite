@@ -98,28 +98,6 @@
       font-size: 1.5rem;
     }
 
-    .customer-type {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .customer-btn {
-      padding: 0.5rem 1.5rem;
-      border: 2px solid var(--gray-border);
-      border-radius: var(--radius);
-      background: var(--white);
-      color: var(--gray-medium);
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .customer-btn.active {
-      border-color: var(--primary);
-      background: var(--primary);
-      color: var(--white);
-    }
-
     .header-bottom {
       display: flex;
       justify-content: space-between;
@@ -161,12 +139,12 @@
     /* Search Bar */
     .search-container {
       position: relative;
-      width: 400px;
+      width: 500px;
     }
 
     .search-box {
       width: 100%;
-      padding: 0.8rem 1rem 0.8rem 3rem;
+      padding: 1rem 1rem 1rem 3rem;
       border: 2px solid var(--gray-border);
       border-radius: var(--radius);
       font-size: 1rem;
@@ -186,6 +164,50 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--gray-medium);
+    }
+
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border: 2px solid var(--primary);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: var(--shadow-hover);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    .search-suggestions.active {
+      display: block;
+    }
+
+    .suggestion-category {
+      padding: 0.8rem 1rem;
+      background: var(--gray-light);
+      font-weight: 600;
+      color: var(--gray-dark);
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .suggestion-item {
+      padding: 0.8rem 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .suggestion-item:hover {
+      background: var(--primary-light);
+    }
+
+    .suggestion-item:last-child {
+      border-bottom: none;
     }
 
     /* Hero Section */
@@ -901,10 +923,6 @@
         <i class="fas fa-mobile-alt logo-icon"></i>
         <span>Techbuy</span>
       </a>
-      <div class="customer-type">
-        <button class="customer-btn active">Für Privatkunden</button>
-        <button class="customer-btn">Für Unternehmen</button>
-      </div>
     </div>
     
     <div class="header-bottom">
@@ -923,7 +941,10 @@
       
       <div class="search-container">
         <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-box" placeholder="Gerät suchen... z.B. iPhone 13">
+        <input type="text" class="search-box" placeholder="Gerät suchen... z.B. iPhone 13" id="searchInput">
+        <div class="search-suggestions" id="searchSuggestions">
+          <!-- Suggestions will be populated by JavaScript -->
+        </div>
       </div>
     </div>
   </header>
@@ -941,10 +962,6 @@
       <div class="feature">
         <i class="fas fa-check-circle"></i>
         <span>Keine versteckten Kosten</span>
-      </div>
-      <div class="feature">
-        <i class="fas fa-check-circle"></i>
-        <span>3 Mio. zufriedene Kunden</span>
       </div>
     </div>
   </section>
@@ -1185,7 +1202,7 @@
         </div>
         <div class="device-name">Apple iPhone 13</div>
         <div class="device-storage">256 GB</div>
-        <div class="price" id="displayPrice">420,00 €</div>
+        <div class="price" id="displayPrice">450,00 €</div>
         <div class="price-note">Bitte beantworte die Fragen zu deinem Gerät</div>
       </div>
 
@@ -1244,6 +1261,105 @@
   </footer>
 
   <script>
+    // Device Database - All Models
+    const deviceDatabase = [
+      // Apple iPhone 12 Series
+      { name: 'Apple iPhone 12', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 mini', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro Max', category: 'Apple iPhone' },
+      
+      // Apple iPhone 13 Series
+      { name: 'Apple iPhone 13', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 mini', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro Max', category: 'Apple iPhone' },
+      
+      // Apple iPhone 14 Series
+      { name: 'Apple iPhone 14', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Plus', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro Max', category: 'Apple iPhone' },
+      
+      // Apple iPhone 15 Series
+      { name: 'Apple iPhone 15', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Plus', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro Max', category: 'Apple iPhone' },
+      
+      // Apple iPhone 16 Series
+      { name: 'Apple iPhone 16', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Plus', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro Max', category: 'Apple iPhone' },
+      
+      // Apple iPhone 17 Series
+      { name: 'Apple iPhone 17', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 17 Plus', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 17 Pro', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 17 Pro Max', category: 'Apple iPhone' },
+      
+      // Samsung Galaxy S Series
+      { name: 'Samsung Galaxy S22', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22+', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22 Ultra', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23+', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23 Ultra', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24+', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24 Ultra', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S25', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S25+', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S25 Ultra', category: 'Samsung Galaxy' },
+      
+      // Samsung Galaxy Fold Series
+      { name: 'Samsung Galaxy Fold 4', category: 'Samsung Galaxy Fold' },
+      { name: 'Samsung Galaxy Fold 5', category: 'Samsung Galaxy Fold' },
+      { name: 'Samsung Galaxy Fold 6', category: 'Samsung Galaxy Fold' },
+      { name: 'Samsung Galaxy Fold 7', category: 'Samsung Galaxy Fold' },
+      
+      // Samsung Galaxy Flip Series
+      { name: 'Samsung Galaxy Flip 5', category: 'Samsung Galaxy Flip' },
+      { name: 'Samsung Galaxy Flip 6', category: 'Samsung Galaxy Flip' },
+      { name: 'Samsung Galaxy Flip 7', category: 'Samsung Galaxy Flip' },
+      
+      // Xiaomi Series
+      { name: 'Xiaomi 13', category: 'Xiaomi' },
+      { name: 'Xiaomi 13 Pro', category: 'Xiaomi' },
+      { name: 'Xiaomi 13 Ultra', category: 'Xiaomi' },
+      { name: 'Xiaomi 14', category: 'Xiaomi' },
+      { name: 'Xiaomi 14 Pro', category: 'Xiaomi' },
+      { name: 'Xiaomi 14 Ultra', category: 'Xiaomi' },
+      { name: 'Xiaomi 15', category: 'Xiaomi' },
+      { name: 'Xiaomi 15 Pro', category: 'Xiaomi' },
+      { name: 'Xiaomi 15 Ultra', category: 'Xiaomi' },
+      
+      // iPad Series
+      { name: 'iPad 9. Gen', category: 'Apple iPad' },
+      { name: 'iPad 10. Gen', category: 'Apple iPad' },
+      { name: 'iPad Air 5. Gen', category: 'Apple iPad' },
+      { name: 'iPad Air 6. Gen', category: 'Apple iPad' },
+      { name: 'iPad Pro 11" 3. Gen', category: 'Apple iPad' },
+      { name: 'iPad Pro 11" 4. Gen', category: 'Apple iPad' },
+      { name: 'iPad Pro 12.9" 6. Gen', category: 'Apple iPad' },
+      { name: 'iPad Pro 12.9" 7. Gen', category: 'Apple iPad' },
+      { name: 'iPad mini 6. Gen', category: 'Apple iPad' },
+      { name: 'iPad mini 7. Gen', category: 'Apple iPad' },
+      
+      // Google Pixel Series
+      { name: 'Google Pixel 7', category: 'Google Pixel' },
+      { name: 'Google Pixel 7 Pro', category: 'Google Pixel' },
+      { name: 'Google Pixel 7a', category: 'Google Pixel' },
+      { name: 'Google Pixel 8', category: 'Google Pixel' },
+      { name: 'Google Pixel 8 Pro', category: 'Google Pixel' },
+      { name: 'Google Pixel 8a', category: 'Google Pixel' },
+      { name: 'Google Pixel 9', category: 'Google Pixel' },
+      { name: 'Google Pixel 9 Pro', category: 'Google Pixel' },
+      { name: 'Google Pixel 9 Pro Fold', category: 'Google Pixel' },
+      { name: 'Google Pixel Fold', category: 'Google Pixel' }
+    ];
+
     // Condition Descriptions
     const conditionDescriptions = {
       'new': {
@@ -1301,6 +1417,75 @@
       'poor': 250.00
     };
 
+    // Search Functionality
+    const searchInput = document.getElementById('searchInput');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+
+    searchInput.addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      searchSuggestions.innerHTML = '';
+      
+      if (query.length < 2) {
+        searchSuggestions.classList.remove('active');
+        return;
+      }
+      
+      const filteredDevices = deviceDatabase.filter(device => 
+        device.name.toLowerCase().includes(query)
+      );
+      
+      if (filteredDevices.length > 0) {
+        // Group by category
+        const categories = {};
+        filteredDevices.forEach(device => {
+          if (!categories[device.category]) {
+            categories[device.category] = [];
+          }
+          categories[device.category].push(device);
+        });
+        
+        // Create suggestion items
+        Object.keys(categories).forEach(category => {
+          const categoryElement = document.createElement('div');
+          categoryElement.className = 'suggestion-category';
+          categoryElement.textContent = category;
+          searchSuggestions.appendChild(categoryElement);
+          
+          categories[category].forEach(device => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+            item.textContent = device.name;
+            item.addEventListener('click', function() {
+              searchInput.value = device.name;
+              searchSuggestions.classList.remove('active');
+              updateDeviceDisplay(device.name);
+            });
+            searchSuggestions.appendChild(item);
+          });
+        });
+        
+        searchSuggestions.classList.add('active');
+      } else {
+        searchSuggestions.classList.remove('active');
+      }
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!searchContainer.contains(e.target)) {
+        searchSuggestions.classList.remove('active');
+      }
+    });
+
+    // Update device display when selected
+    function updateDeviceDisplay(deviceName) {
+      const deviceNameElement = document.querySelector('.device-name');
+      deviceNameElement.textContent = deviceName;
+      
+      // Update price based on new device (you can implement different pricing logic here)
+      updatePrice('like-new');
+    }
+
     // Condition Selection
     document.querySelectorAll('.condition-option').forEach(option => {
       option.addEventListener('click', function() {
@@ -1348,23 +1533,6 @@
         
         // Show selected payment details
         document.getElementById(`${paymentMethod}-details`).classList.add('active');
-      });
-    });
-
-    // Search Functionality
-    const searchBox = document.querySelector('.search-box');
-    searchBox.addEventListener('input', function(e) {
-      // Here you would typically filter devices or show suggestions
-      console.log('Searching for:', e.target.value);
-    });
-
-    // Customer Type Toggle
-    document.querySelectorAll('.customer-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.customer-btn').forEach(b => {
-          b.classList.remove('active');
-        });
-        this.classList.add('active');
       });
     });
 
@@ -1424,6 +1592,8 @@
       
       // Show bank details by default
       document.getElementById('bank-details').classList.add('active');
+      
+      const searchContainer = document.querySelector('.search-container');
     });
   </script>
 </body>
