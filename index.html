@@ -100,8 +100,9 @@
 
     .header-bottom {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      position: relative;
     }
 
     nav {
@@ -136,20 +137,22 @@
       background: var(--primary);
     }
 
-    /* Search Bar */
+    /* Search Bar - Updated for center positioning */
     .search-container {
       position: relative;
-      width: 500px;
+      width: 600px;
+      margin: 0 auto;
     }
 
     .search-box {
       width: 100%;
-      padding: 1rem 1rem 1rem 3rem;
+      padding: 1.2rem 1.2rem 1.2rem 3.5rem;
       border: 2px solid var(--gray-border);
       border-radius: var(--radius);
-      font-size: 1rem;
+      font-size: 1.1rem;
       transition: var(--transition);
       background: var(--white);
+      box-shadow: var(--shadow);
     }
 
     .search-box:focus {
@@ -160,10 +163,11 @@
 
     .search-icon {
       position: absolute;
-      left: 1rem;
+      left: 1.2rem;
       top: 50%;
       transform: translateY(-50%);
       color: var(--gray-medium);
+      font-size: 1.2rem;
     }
 
     .search-suggestions {
@@ -176,7 +180,7 @@
       border-top: none;
       border-radius: 0 0 var(--radius) var(--radius);
       box-shadow: var(--shadow-hover);
-      max-height: 300px;
+      max-height: 400px;
       overflow-y: auto;
       z-index: 1000;
       display: none;
@@ -187,7 +191,7 @@
     }
 
     .suggestion-category {
-      padding: 0.8rem 1rem;
+      padding: 1rem 1.2rem;
       background: var(--gray-light);
       font-weight: 600;
       color: var(--gray-dark);
@@ -196,10 +200,13 @@
     }
 
     .suggestion-item {
-      padding: 0.8rem 1rem;
+      padding: 1rem 1.2rem;
       cursor: pointer;
       transition: var(--transition);
       border-bottom: 1px solid var(--gray-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .suggestion-item:hover {
@@ -210,6 +217,64 @@
       border-bottom: none;
     }
 
+    .suggestion-storage {
+      font-size: 0.9rem;
+      color: var(--gray-medium);
+      background: var(--gray-light);
+      padding: 0.3rem 0.6rem;
+      border-radius: 20px;
+    }
+
+    /* Question Mark Tooltip */
+    .question-tooltip {
+      position: relative;
+      display: inline-flex;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+
+    .question-tooltip i {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .tooltip-text {
+      visibility: hidden;
+      width: 250px;
+      background: var(--black);
+      color: var(--white);
+      text-align: center;
+      border-radius: var(--radius);
+      padding: 1rem;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.9rem;
+      font-weight: normal;
+      line-height: 1.4;
+    }
+
+    .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--black) transparent transparent transparent;
+    }
+
+    .question-tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Rest of the CSS remains the same as before... */
     /* Hero Section */
     .hero {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -503,22 +568,6 @@
       color: var(--primary);
       position: absolute;
       left: 0;
-    }
-
-    /* Help Link */
-    .help-link {
-      color: var(--primary);
-      text-decoration: none;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      margin-bottom: 1rem;
-      font-weight: 500;
-    }
-
-    .help-link:hover {
-      text-decoration: underline;
     }
 
     /* Device Summary */
@@ -926,19 +975,6 @@
     </div>
     
     <div class="header-bottom">
-      <nav>
-        <a href="#" class="active">Home</a>
-        <a href="#">Handys</a>
-        <a href="#">Apple MacBooks</a>
-        <a href="#">Apple Macs</a>
-        <a href="#">Tablets</a>
-        <a href="#">Digitalkameras</a>
-        <a href="#">Objektive</a>
-        <a href="#">Camcorder</a>
-        <a href="#">Smartwatches</a>
-        <a href="#">Konsolen</a>
-      </nav>
-      
       <div class="search-container">
         <i class="fas fa-search search-icon"></i>
         <input type="text" class="search-box" placeholder="Gerät suchen... z.B. iPhone 13" id="searchInput">
@@ -994,11 +1030,21 @@
               <input type="radio" name="functionality" value="working" checked> 
               Gerät lässt sich einwandfrei benutzen
             </label>
+            <label class="radio-option">
+              <input type="radio" name="functionality" value="not-working"> 
+              Gerät lässt sich nicht einwandfrei benutzen
+            </label>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Batterie in Ordnung?</label>
+          <label>
+            Batterie in Ordnung?
+            <span class="question-tooltip">
+              <i class="fas fa-question-circle"></i>
+              <span class="tooltip-text">Die Batterie-Kapazität sollte über 85% betragen und das Gerät sollte sich normal aufladen lassen.</span>
+            </span>
+          </label>
           <div class="radio-group">
             <label class="radio-option selected">
               <input type="radio" name="battery" value="yes" checked> Ja
@@ -1013,27 +1059,27 @@
       <!-- Condition Assessment -->
       <div class="form-section">
         <h2 class="form-title">Bewerte den äußerlichen Zustand</h2>
-        
-        <a href="#" class="help-link">
-          <i class="fas fa-question-circle"></i>
-          Nicht sicher? Hier geht's zum Erklärvideo!
-        </a>
 
         <div class="condition-options">
           <div class="condition-option" data-value="new">
             <div class="name">Neu</div>
+            <div class="description">Makellos, keine Gebrauchsspuren</div>
           </div>
           <div class="condition-option selected" data-value="like-new">
             <div class="name">Wie Neu</div>
+            <div class="description">Kaum sichtbare Spuren</div>
           </div>
           <div class="condition-option" data-value="good">
             <div class="name">Gut</div>
+            <div class="description">Leichte Gebrauchsspuren</div>
           </div>
           <div class="condition-option" data-value="okay">
             <div class="name">In Ordnung</div>
+            <div class="description">Deutliche Gebrauchsspuren</div>
           </div>
           <div class="condition-option" data-value="poor">
             <div class="name">Schlecht</div>
+            <div class="description">Starke Beschädigungen</div>
           </div>
         </div>
 
@@ -1261,113 +1307,165 @@
   </footer>
 
   <script>
-    // Device Database - All Models
+    // Enhanced Device Database with Storage Capacities
     const deviceDatabase = [
       // Apple iPhone 12 Series
-      { name: 'Apple iPhone 12', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 12 mini', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 12 Pro', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 12 Pro Max', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12', storage: '64 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 mini', storage: '64 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 mini', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 mini', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro Max', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro Max', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 12 Pro Max', storage: '512 GB', category: 'Apple iPhone' },
       
       // Apple iPhone 13 Series
-      { name: 'Apple iPhone 13', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 13 mini', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 13 Pro', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 13 Pro Max', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 mini', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 mini', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 mini', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro', storage: '1 TB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro Max', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro Max', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro Max', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 13 Pro Max', storage: '1 TB', category: 'Apple iPhone' },
       
       // Apple iPhone 14 Series
-      { name: 'Apple iPhone 14', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 14 Plus', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 14 Pro', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 14 Pro Max', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Plus', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Plus', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Plus', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro', storage: '1 TB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro Max', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro Max', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro Max', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 14 Pro Max', storage: '1 TB', category: 'Apple iPhone' },
       
       // Apple iPhone 15 Series
-      { name: 'Apple iPhone 15', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 15 Plus', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 15 Pro', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 15 Pro Max', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Plus', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Plus', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Plus', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro', storage: '1 TB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro Max', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro Max', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 15 Pro Max', storage: '1 TB', category: 'Apple iPhone' },
       
       // Apple iPhone 16 Series
-      { name: 'Apple iPhone 16', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 16 Plus', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 16 Pro', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 16 Pro Max', category: 'Apple iPhone' },
-      
-      // Apple iPhone 17 Series
-      { name: 'Apple iPhone 17', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 17 Air', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 17 Pro', category: 'Apple iPhone' },
-      { name: 'Apple iPhone 17 Pro Max', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Plus', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Plus', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Plus', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro', storage: '128 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro', storage: '1 TB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro Max', storage: '256 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro Max', storage: '512 GB', category: 'Apple iPhone' },
+      { name: 'Apple iPhone 16 Pro Max', storage: '1 TB', category: 'Apple iPhone' },
       
       // Samsung Galaxy S Series
-      { name: 'Samsung Galaxy S22', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S22+', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S22 Ultra', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S23', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S23+', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S23 Ultra', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S24', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S24 fe', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S24+', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S24 Ultra', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S25', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S25 fe', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S25 Edge', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S25+', category: 'Samsung Galaxy' },
-      { name: 'Samsung Galaxy S25 Ultra', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22', storage: '128 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22+', storage: '128 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22+', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22 Ultra', storage: '128 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22 Ultra', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22 Ultra', storage: '512 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S22 Ultra', storage: '1 TB', category: 'Samsung Galaxy' },
       
-      // Samsung Galaxy Fold Series
-      { name: 'Samsung Galaxy Fold 4', category: 'Samsung Galaxy Fold' },
-      { name: 'Samsung Galaxy Fold 5', category: 'Samsung Galaxy Fold' },
-      { name: 'Samsung Galaxy Fold 6', category: 'Samsung Galaxy Fold' },
-      { name: 'Samsung Galaxy Fold 7', category: 'Samsung Galaxy Fold' },
+      { name: 'Samsung Galaxy S23', storage: '128 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23+', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23+', storage: '512 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23 Ultra', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23 Ultra', storage: '512 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S23 Ultra', storage: '1 TB', category: 'Samsung Galaxy' },
       
-      // Samsung Galaxy Flip Series
-      { name: 'Samsung Galaxy Flip 5', category: 'Samsung Galaxy Flip' },
-      { name: 'Samsung Galaxy Flip 6', category: 'Samsung Galaxy Flip' },
-      { name: 'Samsung Galaxy Flip 7', category: 'Samsung Galaxy Flip' },
-      
-      // Xiaomi Series
-      { name: 'Xiaomi 13', category: 'Xiaomi' },
-      { name: 'Xiaomi 13 Pro', category: 'Xiaomi' },
-      { name: 'Xiaomi 13 Ultra', category: 'Xiaomi' },
-      { name: 'Xiaomi 14', category: 'Xiaomi' },
-      { name: 'Xiaomi 14 Pro', category: 'Xiaomi' },
-      { name: 'Xiaomi 14 Ultra', category: 'Xiaomi' },
-      { name: 'Xiaomi 15', category: 'Xiaomi' },
-      { name: 'Xiaomi 15 Pro', category: 'Xiaomi' },
-      { name: 'Xiaomi 15 Ultra', category: 'Xiaomi' },
-      
-      // iPad Series
-      { name: 'iPad 9. Gen', category: 'Apple iPad' },
-      { name: 'iPad 10. Gen', category: 'Apple iPad' },
-      { name: 'iPad Air 5. Gen', category: 'Apple iPad' },
-      { name: 'iPad Air 6. Gen', category: 'Apple iPad' },
-      { name: 'iPad Air 7. Gen', category: 'Apple iPad' },
-      { name: 'iPad Pro 11" 3. Gen', category: 'Apple iPad' },
-      { name: 'iPad Pro 11" 4. Gen', category: 'Apple iPad' },
-      { name: 'iPad Pro 11" 5. Gen', category: 'Apple iPad' },
-      { name: 'iPad Pro 12.9" 6. Gen', category: 'Apple iPad' },
-      { name: 'iPad Pro 12.9" 7. Gen', category: 'Apple iPad' },
-      { name: 'iPad mini 6. Gen', category: 'Apple iPad' },
-      { name: 'iPad mini 7. Gen', category: 'Apple iPad' },
+      { name: 'Samsung Galaxy S24', storage: '128 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24+', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24+', storage: '512 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24 Ultra', storage: '256 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24 Ultra', storage: '512 GB', category: 'Samsung Galaxy' },
+      { name: 'Samsung Galaxy S24 Ultra', storage: '1 TB', category: 'Samsung Galaxy' },
       
       // Google Pixel Series
-      { name: 'Google Pixel 7', category: 'Google Pixel' },
-      { name: 'Google Pixel 7 Pro', category: 'Google Pixel' },
-      { name: 'Google Pixel 7a', category: 'Google Pixel' },
-      { name: 'Google Pixel 8', category: 'Google Pixel' },
-      { name: 'Google Pixel 8 Pro', category: 'Google Pixel' },
-      { name: 'Google Pixel 8a', category: 'Google Pixel' },
-      { name: 'Google Pixel 9', category: 'Google Pixel' },
-      { name: 'Google Pixel 9 Pro', category: 'Google Pixel' },
-      { name: 'Google Pixel 10', category: 'Google Pixel' },
-      { name: 'Google Pixel 10 Pro', category: 'Google Pixel' },
-      { name: 'Google Pixel 10 Pro XL', category: 'Google Pixel' }
-      { name: 'Google Pixel Fold', category: 'Google Pixel' },
-      { name: 'Google Pixel 9 Pro Fold', category: 'Google Pixel' },
-      { name: 'Google Pixel 10 Pro Fold', category: 'Google Pixel' } 
+      { name: 'Google Pixel 8', storage: '128 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 8', storage: '256 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 8 Pro', storage: '128 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 8 Pro', storage: '256 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 8 Pro', storage: '512 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 8 Pro', storage: '1 TB', category: 'Google Pixel' },
+      { name: 'Google Pixel 9', storage: '128 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 9', storage: '256 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 9 Pro', storage: '128 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 9 Pro', storage: '256 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 9 Pro', storage: '512 GB', category: 'Google Pixel' },
+      { name: 'Google Pixel 9 Pro', storage: '1 TB', category: 'Google Pixel' }
     ];
+
+    // Enhanced Price Database with different prices per device and storage
+    const priceDatabase = {
+      // iPhone 13 prices
+      'Apple iPhone 13': {
+        '128 GB': { 'new': 500, 'like-new': 450, 'good': 400, 'okay': 350, 'poor': 250 },
+        '256 GB': { 'new': 550, 'like-new': 500, 'good': 450, 'okay': 400, 'poor': 300 },
+        '512 GB': { 'new': 650, 'like-new': 600, 'good': 550, 'okay': 500, 'poor': 400 }
+      },
+      // iPhone 14 prices
+      'Apple iPhone 14': {
+        '128 GB': { 'new': 600, 'like-new': 550, 'good': 500, 'okay': 450, 'poor': 350 },
+        '256 GB': { 'new': 650, 'like-new': 600, 'good': 550, 'okay': 500, 'poor': 400 },
+        '512 GB': { 'new': 750, 'like-new': 700, 'good': 650, 'okay': 600, 'poor': 500 }
+      },
+      // iPhone 15 prices
+      'Apple iPhone 15': {
+        '128 GB': { 'new': 700, 'like-new': 650, 'good': 600, 'okay': 550, 'poor': 450 },
+        '256 GB': { 'new': 750, 'like-new': 700, 'good': 650, 'okay': 600, 'poor': 500 },
+        '512 GB': { 'new': 850, 'like-new': 800, 'good': 750, 'okay': 700, 'poor': 600 }
+      },
+      // iPhone 16 prices
+      'Apple iPhone 16': {
+        '128 GB': { 'new': 800, 'like-new': 750, 'good': 700, 'okay': 650, 'poor': 550 },
+        '256 GB': { 'new': 850, 'like-new': 800, 'good': 750, 'okay': 700, 'poor': 600 },
+        '512 GB': { 'new': 950, 'like-new': 900, 'good': 850, 'okay': 800, 'poor': 700 }
+      },
+      // Google Pixel prices
+      'Google Pixel 9 Pro': {
+        '128 GB': { 'new': 800, 'like-new': 750, 'good': 700, 'okay': 650, 'poor': 550 },
+        '256 GB': { 'new': 850, 'like-new': 800, 'good': 750, 'okay': 700, 'poor': 600 },
+        '512 GB': { 'new': 950, 'like-new': 900, 'good': 850, 'okay': 800, 'poor': 700 },
+        '1 TB': { 'new': 1050, 'like-new': 1000, 'good': 950, 'okay': 900, 'poor': 800 }
+      },
+      // Default prices for devices not in database
+      'default': {
+        '128 GB': { 'new': 400, 'like-new': 350, 'good': 300, 'okay': 250, 'poor': 150 },
+        '256 GB': { 'new': 450, 'like-new': 400, 'good': 350, 'okay': 300, 'poor': 200 },
+        '512 GB': { 'new': 550, 'like-new': 500, 'good': 450, 'okay': 400, 'poor': 300 }
+      }
+    };
 
     // Condition Descriptions
     const conditionDescriptions = {
@@ -1417,14 +1515,10 @@
       }
     };
 
-    // Prices for different conditions
-    const prices = {
-      'new': 450.00,
-      'like-new': 420.00,
-      'good': 380.00,
-      'okay': 320.00,
-      'poor': 250.00
-    };
+    // Global variables
+    let currentSelectedDevice = null;
+    let currentSelectedCondition = 'like-new';
+    const searchContainer = document.querySelector('.search-container');
 
     // Search Functionality
     const searchInput = document.getElementById('searchInput');
@@ -1440,7 +1534,8 @@
       }
       
       const filteredDevices = deviceDatabase.filter(device => 
-        device.name.toLowerCase().includes(query)
+        device.name.toLowerCase().includes(query) || 
+        device.category.toLowerCase().includes(query)
       );
       
       if (filteredDevices.length > 0) {
@@ -1463,11 +1558,16 @@
           categories[category].forEach(device => {
             const item = document.createElement('div');
             item.className = 'suggestion-item';
-            item.textContent = device.name;
+            item.innerHTML = `
+              <span>${device.name}</span>
+              <span class="suggestion-storage">${device.storage}</span>
+            `;
             item.addEventListener('click', function() {
               searchInput.value = device.name;
               searchSuggestions.classList.remove('active');
-              updateDeviceDisplay(device.name);
+              currentSelectedDevice = device;
+              updateDeviceDisplay(device);
+              updatePrice(currentSelectedCondition);
             });
             searchSuggestions.appendChild(item);
           });
@@ -1487,12 +1587,24 @@
     });
 
     // Update device display when selected
-    function updateDeviceDisplay(deviceName) {
+    function updateDeviceDisplay(device) {
       const deviceNameElement = document.querySelector('.device-name');
-      deviceNameElement.textContent = deviceName;
+      const deviceStorageElement = document.querySelector('.device-storage');
+      const deviceImageElement = document.querySelector('.device-image i');
       
-      // Update price based on new device (you can implement different pricing logic here)
-      updatePrice('like-new');
+      deviceNameElement.textContent = device.name;
+      deviceStorageElement.textContent = device.storage;
+      
+      // Update icon based on brand
+      if (device.category.includes('Apple')) {
+        deviceImageElement.className = 'fab fa-apple';
+      } else if (device.category.includes('Samsung')) {
+        deviceImageElement.className = 'fab fa-android';
+      } else if (device.category.includes('Google')) {
+        deviceImageElement.className = 'fab fa-google';
+      } else {
+        deviceImageElement.className = 'fas fa-mobile-alt';
+      }
     }
 
     // Condition Selection
@@ -1504,6 +1616,7 @@
         this.classList.add('selected');
         
         const condition = this.dataset.value;
+        currentSelectedCondition = condition;
         updateConditionDescription(condition);
         updatePrice(condition);
       });
@@ -1525,7 +1638,28 @@
 
     // Price Calculation
     function updatePrice(condition) {
-      const price = prices[condition];
+      let price = 0;
+      
+      if (currentSelectedDevice) {
+        const deviceName = currentSelectedDevice.name;
+        const storage = currentSelectedDevice.storage;
+        
+        // Get price from database or use default
+        if (priceDatabase[deviceName] && priceDatabase[deviceName][storage]) {
+          price = priceDatabase[deviceName][storage][condition];
+        } else if (priceDatabase.default[storage]) {
+          price = priceDatabase.default[storage][condition];
+        } else {
+          // Fallback prices
+          const fallbackPrices = { 'new': 450, 'like-new': 420, 'good': 380, 'okay': 320, 'poor': 250 };
+          price = fallbackPrices[condition];
+        }
+      } else {
+        // Default prices when no device selected
+        const defaultPrices = { 'new': 450, 'like-new': 420, 'good': 380, 'okay': 320, 'poor': 250 };
+        price = defaultPrices[condition];
+      }
+      
       const priceElement = document.getElementById('displayPrice');
       priceElement.textContent = `${price.toFixed(2).replace('.', ',')} €`;
     }
@@ -1601,8 +1735,6 @@
       
       // Show bank details by default
       document.getElementById('bank-details').classList.add('active');
-      
-      const searchContainer = document.querySelector('.search-container');
     });
   </script>
 </body>
